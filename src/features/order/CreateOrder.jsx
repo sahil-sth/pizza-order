@@ -10,7 +10,7 @@ import { createOrder } from "../../services/apiRestaurant";
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
   /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
-    str
+    str,
   );
 
 const fakeCart = [
@@ -50,13 +50,13 @@ function CreateOrder() {
       <Form method="POST" action="">
         <div>
           <label>First Name</label>
-          <input type="text" name="customer" required />
+          <input type="text" name="customer" className="input" required />
         </div>
 
         <div>
           <label>Phone number</label>
           <div>
-            <input type="tel" name="phone" required />
+            <input type="tel" name="phone" required className="input" />
           </div>
           {formErrors?.phone && <p>{formErrors.phone}</p>}
         </div>
@@ -64,12 +64,13 @@ function CreateOrder() {
         <div>
           <label>Address</label>
           <div>
-            <input type="text" name="address" required />
+            <input type="text" className="input" name="address" required />
           </div>
         </div>
 
         <div>
           <input
+            className="h-6 w-6 accent-yellow-400 focus:outline-none focus:ring-yellow-400 focus:ring-offset-2"
             type="checkbox"
             name="priority"
             id="priority"
@@ -81,7 +82,10 @@ function CreateOrder() {
 
         <div>
           <input name="cart" type="hidden" value={JSON.stringify(cart)} />
-          <button disabled={isSubmitting}>
+          <button
+            disabled={isSubmitting}
+            className="focus:bg-yello-300 inline-block rounded-full bg-yellow-400 px-4 py-3 font-semibold uppercase tracking-wide text-stone-800 transition-colors duration-300 hover:bg-yellow-300 focus:outline-none focus:ring focus:ring-yellow-300 focus:ring-offset-2 disabled:cursor-not-allowed"
+          >
             {isSubmitting ? "Placing order..." : "Order now"}
           </button>
         </div>
@@ -105,8 +109,9 @@ export async function action({ request }) {
     errors.phone = "Please provide the correct phone number";
   // checking if the errors object has any values
   if (Object.keys(errors).length > 0) return errors;
-  const newOrder = await createOrder(order);
-  return redirect(`/order/${newOrder.id}`);
+  // const newOrder = await createOrder(order);
+  // return redirect(`/order/${newOrder.id}`);
+  return null;
 }
 
 export default CreateOrder;
