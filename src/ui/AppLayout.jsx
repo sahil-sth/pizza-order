@@ -9,7 +9,7 @@ function AppLayout() {
   const isLoading = navigation.state === "loading";
 
   return (
-    <div className="grid h-screen grid-rows-[auto_1fr_auto] bg-stone-100">
+    <div className="grid h-dvh grid-rows-[auto_1fr_auto] bg-stone-100">
       {isLoading && <Loading />}
       {/* {true && <Loading />} */}
       <Header />
