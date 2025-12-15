@@ -11,9 +11,11 @@ function Button({ children, disabled = false, to, type = "primary" }) {
   };
   // if the user sent a to prop means that the user is wanting to use Link
   if (to) {
-    <Link to={to} className={styles[type]}>
-      {children}
-    </Link>;
+    return (
+      <Link to={to} className={styles[type]}>
+        {children}
+      </Link>
+    );
   }
   return (
     <button disabled={disabled} className={styles[type]}>
