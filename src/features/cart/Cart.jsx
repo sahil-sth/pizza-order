@@ -2,13 +2,19 @@ import { Link } from "react-router-dom";
 import LinkButton from "../../ui/LinkButton";
 import Button from "../../ui/Button";
 import CartItem from "./CartItem";
-import { useSelector } from "react-redux";
-import { getCart } from "./cartSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { clearCart, getCart } from "./cartSlice";
 import { getUsername } from "../user/userSlice";
+import EmptyCart from "./EmptyCart";
 
 function Cart() {
   const cart = useSelector(getCart);
   const username = useSelector(getUsername);
+  const dispatch = useDispatch();
+  // check if the cart is empty, if it is empty then return EmptyCart
+  if (cart.length === 0) {
+    return <EmptyCart />;
+  }
   return (
     <div className="px-4 py-3">
       <LinkButton to="/menu">&larr; Back to menu</LinkButton>
@@ -23,7 +29,15 @@ function Cart() {
         <Button type="primary" to="/order/new">
           Order pizzas
         </Button>
-        <Button type="secondary">Clear cart</Button>
+        <Button
+          type="secondary"
+          onClick={() => {
+            console.log("Clear cart button clicked");
+            dispatch(clearCart());
+          }}
+        >
+          Clear cart
+        </Button>
       </div>
     </div>
   );
