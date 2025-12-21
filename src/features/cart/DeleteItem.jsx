@@ -8,7 +8,6 @@ function DeleteItem({ pizzaId }) {
     <Button
       type="small"
       onClick={() => {
-        console.log("DeleteItem was clicked");
         dispatch(deleteItem(pizzaId));
       }}
     >
