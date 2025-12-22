@@ -50,3 +50,9 @@ export const getTotalCartPrice = (state) =>
   state.cart.cart.reduce((sum, item) => sum + item.totalPrice, 0);
 
 export const getCart = (state) => state.cart.cart;
+// it is a selector factory that creates a selector which can work in coordination with redux toolkit's useSelector
+export const getCurrentQuantityById = (id) => {
+  return (state) => {
+    return state.cart.cart.find((item) => item.pizzaId === id)?.quantity ?? 0;
+  };
+};
