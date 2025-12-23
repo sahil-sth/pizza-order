@@ -6,46 +6,29 @@ import {
   useActionData,
   useNavigation,
 } from "react-router-dom";
-import { createOrder } from "../../services/apiRestaurant";
-import Button from "../../ui/Button";
 import { useSelector } from "react-redux";
+
+import { createOrder } from "../../services/apiRestaurant";
+
+import Button from "../../ui/Button";
+import EmptyCart from "../cart/EmptyCart";
+import { getUsername } from "../user/userSlice";
+import { getCart } from "../cart/cartSlice";
+
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
   /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
     str,
   );
 
-const fakeCart = [
-  {
-    pizzaId: 12,
-    name: "Mediterranean",
-    quantity: 2,
-    unitPrice: 16,
-    totalPrice: 32,
-  },
-  {
-    pizzaId: 6,
-    name: "Vegetale",
-    quantity: 1,
-    unitPrice: 13,
-    totalPrice: 13,
-  },
-  {
-    pizzaId: 11,
-    name: "Spinach and Mushroom",
-    quantity: 1,
-    unitPrice: 15,
-    totalPrice: 15,
-  },
-];
-
 function CreateOrder() {
   // const [withPriority, setWithPriority] = useState(false);
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
-  const cart = fakeCart;
+  const cart = useSelector(getCart);
   const formErrors = useActionData();
-  const username = useSelector((state) => state.user.username);
+  const username = useSelector(getUsername);
+  if (!cart.length) return <EmptyCart />;
   return (
     <div className="px-4 py-6">
       <h2 className="mb-8 text-xl font-semibold">Ready to order? Let's go!</h2>
@@ -124,9 +107,9 @@ export async function action({ request }) {
     errors.phone = "Please provide the correct phone number";
   // checking if the errors object has any values
   if (Object.keys(errors).length > 0) return errors;
-  // const newOrder = await createOrder(order);
-  // return redirect(`/order/${newOrder.id}`);
-  return null;
+  // if everything is good then submit the order
+  const newOrder = await createOrder(order);
+  return redirect(`/order/${newOrder.id}`);
 }
 
 export default CreateOrder;
