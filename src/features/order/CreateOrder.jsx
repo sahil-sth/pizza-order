@@ -13,7 +13,8 @@ import { createOrder } from "../../services/apiRestaurant";
 import Button from "../../ui/Button";
 import EmptyCart from "../cart/EmptyCart";
 import { getUsername } from "../user/userSlice";
-import { getCart } from "../cart/cartSlice";
+import { getCart, getTotalCartPrice } from "../cart/cartSlice";
+import { formatCurrency } from "../../utils/helpers";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -22,12 +23,15 @@ const isValidPhone = (str) =>
   );
 
 function CreateOrder() {
-  // const [withPriority, setWithPriority] = useState(false);
+  const [withPriority, setWithPriority] = useState(false);
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
   const cart = useSelector(getCart);
   const formErrors = useActionData();
   const username = useSelector(getUsername);
+  const totalCartPrice = useSelector(getTotalCartPrice);
+  const priorityPrice = withPriority ? totalCartPrice * 0.2 : 0;
+  const totalPrice = totalCartPrice + priorityPrice;
   if (!cart.length) return <EmptyCart />;
   return (
     <div className="px-4 py-6">
@@ -75,8 +79,8 @@ function CreateOrder() {
             type="checkbox"
             name="priority"
             id="priority"
-            // value={withPriority}
-            // onChange={(e) => setWithPriority(e.target.checked)}
+            value={withPriority}
+            onChange={(e) => setWithPriority(e.target.checked)}
           />
           <label htmlFor="priority">Want to yo give your order priority?</label>
         </div>
@@ -84,7 +88,9 @@ function CreateOrder() {
         <div>
           <input name="cart" type="hidden" value={JSON.stringify(cart)} />
           <Button disabled={isSubmitting} type="primary">
-            {isSubmitting ? "Placing order..." : "Order now"}
+            {isSubmitting
+              ? "Placing order..."
+              : `Order now for: ${formatCurrency(totalPrice)}`}
           </Button>
         </div>
       </Form>
@@ -99,7 +105,7 @@ export async function action({ request }) {
   const order = {
     ...data,
     cart: JSON.parse(data.cart),
-    priority: data.priority === "on",
+    priority: data.priority === "true",
   };
 
   const errors = {};
