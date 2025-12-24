@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  createMemoryRouter,
-  Form,
-  redirect,
-  useActionData,
-  useNavigation,
-} from "react-router-dom";
+import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { createOrder } from "../../services/apiRestaurant";
